@@ -1,0 +1,9 @@
+services:
+  flaskapp:
+    build: .
+    container_name: flaskapp
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+       - .env
