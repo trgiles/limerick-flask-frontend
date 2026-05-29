@@ -37,7 +37,7 @@ def home():
         batch = key.split("/")[0]
         batches[batch].append(key)
 
-    html = "<h1>Batches</h1><ul>"
+    html = "<h1>Batches (this is a test...)</h1><ul>"
 
     for batch in sorted(batches.keys(), reverse=True):
         html += f'<li><a href="/batch/{batch}">{batch}</a></li>'
