@@ -69,12 +69,14 @@ def view_batch(batch_id):
             data = json.loads(body)
 
             #caption = data["output"][0]["content"][0]["text"]
-
-            caption = (
-                data.get("output", [{}])[1]
-                    .get("content", [{}])[0]
-                    .get("text", "")
-            )
+            try:
+                caption = (
+                    data.get("output", [{}])[0] #some result jsons need index 1...
+                        .get("content", [{}])[0]
+                        .get("text", "")
+                )
+            except Exception as e:
+                print(f"ERROR: {e}")
 
         if key.endswith("/") or key.lower().endswith(".json"):
             continue
