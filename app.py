@@ -2,6 +2,7 @@ from flask import Flask
 import boto3
 from collections import defaultdict
 import json
+import os
 
 #try from staging...idk
 #This is another test from staging...we will see...
@@ -40,7 +41,7 @@ def home():
         batch = key.split("/")[0]
         batches[batch].append(key)
 
-    html = "<h1>Batches (this is a test...)</h1><p>and it is pretty awesome!</p><ul>"
+    html = f"<h1>Batches (this is a test...)</h1><p>and it is pretty awesome!</p><p>Coming at you live from port {os.getenv("APP_PORT")}!</p><ul>"
 
     for batch in sorted(batches.keys(), reverse=True):
         html += f'<li><a href="/batch/{batch}">{batch}</a></li>'
