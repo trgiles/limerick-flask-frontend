@@ -1,9 +1,9 @@
 services:
   flaskapp:
     build: .
-    container_name: flaskapp
+    container_name: limerick-${APP_NAME:-app}
     restart: unless-stopped
     ports:
-      - "127.0.0.1:5000:5000"
+      - "127.0.0.1:${APP_PORT:-5000}:5000"
     env_file:
        - .env

@@ -4,15 +4,14 @@ on:
   push:
     branches:
       - main
+      - staging
 
 jobs:
-  deploy:
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -20,16 +19,34 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy over SSH
+      - name: Deploy to Staging
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
-
-            cd /var/www/limerick-flask-frontend
-
-            git pull origin main
-
+            cd /var/www/limerick-flask-staging
+            git pull origin staging
             docker compose up --build -d
+            docker image prune -f
+          EOF
 
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Production
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            cd /var/www/limerick-flask-frontend
+            git pull origin main
+            docker compose up --build -d
             docker image prune -f
           EOF
