@@ -3,7 +3,7 @@ import boto3
 from collections import defaultdict
 import json
 
-# Test from betsy...
+#try from staging...idk
 
 app = Flask(__name__)
 
